@@ -77,6 +77,7 @@ namespace MongoDbDriverSampleApp.Controllers
     {
 
       // many to many relations select sorgusu
+      // userları teacherları ile birlikte getirdik.
       // $TeacherIds tabloadaki FK alanına bağlandığımız ad
       // teacherIds uygulama içerisinde kullandığımız içerisinde FK gelen değerleri In sorgıusuna soktuğumuz değişken.
       var pipeline = new BsonDocument[]
