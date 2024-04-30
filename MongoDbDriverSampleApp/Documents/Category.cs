@@ -1,10 +1,10 @@
 ﻿using MongoDB.Bson;
+using MongoDbDriverSampleApp.Repositories;
 
 namespace MongoDbDriverSampleApp.Documents
 {
-  public class Category
+  public class Category:Document
   {
-    public ObjectId Id { get; set; }
     public string Name { get; set; }
 
     public Category()

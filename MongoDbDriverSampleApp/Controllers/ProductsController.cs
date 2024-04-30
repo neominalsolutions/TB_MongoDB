@@ -4,6 +4,8 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDbDriverSampleApp.Documents;
 using MongoDbDriverSampleApp.Dtos;
+using MongoDbDriverSampleApp.Repositories;
+using MongoDbDriverSampleApp.Repositories.Products;
 using MongoDbDriverSampleApp.Settiings;
 
 namespace MongoDbDriverSampleApp.Controllers
@@ -14,13 +16,17 @@ namespace MongoDbDriverSampleApp.Controllers
   {
     private readonly IMongoCollection<Product> productCollection;
     private readonly IMongoCollection<Category> categoryCollection;
-    public ProductsController(IMongoDbSettings mongoDbSettings)
+    private readonly IMongoProductRepo mongoProductRepo;
+    private readonly IMongoUnitOfWork mongoUnitOfWork;
+    public ProductsController(IMongoDbSettings mongoDbSettings, IMongoProductRepo mongoProductRepo, IMongoUnitOfWork mongoUnitOfWork)
     {
       var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
       var db = mongoClient.GetDatabase(mongoDbSettings.DatabaseName);
       this.productCollection = db.GetCollection<Product>("products");
       this.categoryCollection = db.GetCollection<Category>("categories");
       //var session = mongoClient.StartSession();
+      this.mongoProductRepo = mongoProductRepo;
+      this.mongoUnitOfWork = mongoUnitOfWork;
     }
 
     [HttpGet("queries")]
@@ -233,6 +239,31 @@ namespace MongoDbDriverSampleApp.Controllers
 
       // find and delete yapar
       var product = await productCollection.DeleteOneAsync(x => x.Id == _id);
+
+      return Ok();
+    }
+
+    [HttpPost("uOw")]
+    public async Task<IActionResult> UnitOfWorkTest()
+    {
+      var product = new Product
+      {
+        Name = "P-UoW",
+        Price = 100,
+        Stock = 500
+      };
+
+      var p2 = new Product
+      {
+        Name = "P-uoW2",
+        Price = 150,
+        Stock = 600
+      };
+
+     await  mongoProductRepo.CreateAsync(product);
+      await mongoProductRepo.CreateAsync(p2);
+
+      await mongoUnitOfWork.CommitAsync();
 
       return Ok();
     }

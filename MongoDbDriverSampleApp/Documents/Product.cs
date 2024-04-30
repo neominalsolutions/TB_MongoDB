@@ -1,12 +1,15 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDbDriverSampleApp.Repositories;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MongoDbDriverSampleApp.Documents
 {
-  public class Product
+  // Bütün Collectionlar Repository Pattern Kullanmak için Document Base classtan kalıtım almalıdır.
+  // Embeded olanlar documan olmadığı için gerek yok.
+  public class Product:Document
   {
-    public ObjectId Id { get; set; } // PK ve FK alanlar ObjectId olmalıdır. Index için önemli
+   
     public string Name { get; set; }
 
     [BsonRepresentation(BsonType.Decimal128)]
