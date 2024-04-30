@@ -39,16 +39,18 @@ namespace MongoDbDriverSampleApp.Controllers
     [HttpPost]
     public async Task<IActionResult> Create()
     {
+      // embded document insert sample
+
       var post = new Post();
-      post.Title = "Post-1";
-      post.Content = "Test";
-      post.Tags = new List<string> { "Tag1","Tag2", "Tag3"};
-      post.User = new User { Name = "ali" };
+      post.Title = "Post-3";
+      post.Content = "Test-3";
+      post.Tags = new List<string> { "Tag14","Tag23", "Tag3"};
+      post.User = new User { Name = "mert" };
       post.Comments = new List<Comment>
       {
         new Comment
         {
-          Text = "Comment-1",
+          Text = "Comment-3",
           CreatedAt = DateTime.Now,
           CommentUser = new User {Name = "Can"}
         }
