@@ -33,7 +33,26 @@ namespace MongoDbDriverSampleApp.Controllers
 
       var doc = await postCollection.Find(filter).ToListAsync();
 
-      return Ok(doc);
+
+      // post document içerisinde user Name can ile başlayan postları getir.
+
+      var filter2 = Builders<Post>.Filter.Regex(x => x.User.Name, "/^can/i");
+
+      var doc2 = await postCollection.Find(filter2).ToListAsync();
+
+      // post documanlarında Tag3 ve Tag1 etkiletine sahip postlar.
+      // AnyIn veya gibi çalışır, Tag3 veya Tag1 olması yeterlidir
+      // All and gibi çalışır, Tag1 ve Tag3 alt düğümde olmak zorundadır. eşleşenleri getirir.
+      var filter3 = Builders<Post>.Filter.All(x => x.Tags, new List<string> { "Tag3", "Tag1" });
+      var doc3 = await postCollection.Find(filter3).ToListAsync();
+
+      // Post Commentsleri içerisindeki User Objecnin name alanı ali olan kayıtları getir. alinin yorum yaptığı postları getir.
+
+      var filter4 = Builders<Post>.Filter.ElemMatch(x => x.Comments, comment => comment.CommentUser.Name == "ali");
+
+      var doc4 = await postCollection.Find(filter4).ToListAsync();
+
+      return Ok(doc4);
     }
 
     [HttpPost]
